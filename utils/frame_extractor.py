@@ -152,4 +152,5 @@ def frame_extract(camera_1, camera_2,pc_dir_1,pc_dir_2):
             sys.stdout.write("\nSVO end has been reached. Exiting now.\n")
     zed1.close()
     zed2.close()
+    return zed_pose_1, zed_pose_2
 
