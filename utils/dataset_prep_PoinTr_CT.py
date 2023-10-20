@@ -1,12 +1,14 @@
-import os
+#this script is used to generate partial and complete point clouds from the stl files
 
+
+import os
 import pyvista as pv
 import numpy as np
 import open3d as o3d
 
 # Load the STL file
 dir =r"F:\shapeCompletion\stls from ct\from Sascha"
-num_points_to_sample = 4096  # Adjust this number according to your needs
+num_points_to_sample = 16384  # Adjust this number according to your needs
 
 target = o3d.io.read_triangle_mesh(r"F:\shapeCompletion\stls from ct\from Sascha\1.3.6.1.4.1.9328.50.4.0001_L2.stl")
 target_pcd = target.sample_points_uniformly(num_points_to_sample)
