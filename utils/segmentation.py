@@ -26,16 +26,6 @@ if status != sl.ERROR_CODE.SUCCESS:
 
 runtime_parameters = sl.RuntimeParameters()
 
-
-
-# # Enable positional tracking with default parameters
-# py_transform = sl.Transform()
-# tracking_parameters = sl.PositionalTrackingParameters(py_transform)
-# err = zed.enable_positional_tracking(tracking_parameters)
-# if err != sl.ERROR_CODE.SUCCESS:
-#     print(repr(status))
-#     exit(1)
-
 zed_pose = sl.Pose()
 zed_sensors = sl.SensorsData()
 calibration_params = zed.get_camera_information().camera_configuration.calibration_parameters
