@@ -7,16 +7,16 @@ import time
 
 o3d.utility.set_verbosity_level(o3d.utility.VerbosityLevel.Error)
 # Load the STL file
-dir ="/media/aidana/Extreme SSD/PoinTr dataset/segmented_spinedepth_new"
-save_dir ="/media/aidana/Extreme SSD/aligned_new_new"
-num_points_to_sample = 16384
-target = o3d.io.read_triangle_mesh("/home/aidana/Documents/PoinTr dataset/target.stl")
-target_pcd = target.sample_points_uniformly(num_points_to_sample)
+dir ="/Volumes/Extreme SSD/PoinTr dataset/segmented_spinedepth_new"
+save_dir ="/Volumes/Extreme SSD/aligned_new_new"
+num_points_to_sample = 2048
+
 
 specimens = os.listdir(dir)
 
+
 for specimen in specimens:
-    transformations=np.loadtxt(os.path.join("/media/aidana/Extreme SSD/SpineDepth",specimen,"transformation_matrices.txt"))
+    transformations=np.loadtxt(os.path.join("/Volumes/Extreme SSD/SpineDepth",specimen,"transformation_matrices.txt"))
     recordings = os.listdir(os.path.join(dir, specimen))
     for recording in recordings:
         cameras = os.listdir(os.path.join(dir, specimen, recording))
@@ -29,11 +29,11 @@ for specimen in specimens:
 
 
 
-                mesh1 = o3d.io.read_triangle_mesh(os.path.join("/media/aidana/Extreme SSD/SpineDepth",specimen,"STL/L1.stl"))
-                mesh2 = o3d.io.read_triangle_mesh(os.path.join("/media/aidana/Extreme SSD/SpineDepth",specimen,"STL/L2.stl"))
-                mesh3 = o3d.io.read_triangle_mesh(os.path.join("/media/aidana/Extreme SSD/SpineDepth",specimen,"STL/L3.stl"))
-                mesh4 = o3d.io.read_triangle_mesh(os.path.join("/media/aidana/Extreme SSD/SpineDepth",specimen,"STL/L4.stl"))
-                mesh5 = o3d.io.read_triangle_mesh(os.path.join("/media/aidana/Extreme SSD/SpineDepth",specimen,"STL/L5.stl"))
+                mesh1 = o3d.io.read_triangle_mesh(os.path.join("/Volumes/Extreme SSD/SpineDepth",specimen,"STL/L1.stl"))
+                mesh2 = o3d.io.read_triangle_mesh(os.path.join("/Volumes/Extreme SSD/SpineDepth",specimen,"STL/L2.stl"))
+                mesh3 = o3d.io.read_triangle_mesh(os.path.join("/Volumes/Extreme SSD/SpineDepth",specimen,"STL/L3.stl"))
+                mesh4 = o3d.io.read_triangle_mesh(os.path.join("/Volumes/Extreme SSD/SpineDepth",specimen,"STL/L4.stl"))
+                mesh5 = o3d.io.read_triangle_mesh(os.path.join("/Volumes/Extreme SSD/SpineDepth",specimen,"STL/L5.stl"))
 
                 pcd1 = o3d.io.read_point_cloud(os.path.join(f_path,"pointcloud_vert1_cropped.ply"))
                 pcd2 = o3d.io.read_point_cloud(os.path.join(f_path,"pointcloud_vert2_cropped.ply"))
@@ -67,8 +67,14 @@ for specimen in specimens:
                 MP_right_vert4 =  o3d.geometry.TriangleMesh.create_sphere(radius=1.0)
                 MP_right_vert5 =  o3d.geometry.TriangleMesh.create_sphere(radius=1.0)
 
+                mesh1.compute_vertex_normals()
+                mesh2.compute_vertex_normals()
+                mesh3.compute_vertex_normals()
+                mesh4.compute_vertex_normals()
+                mesh5.compute_vertex_normals()
 
-                mesh1_pcd = mesh1.sample_points_uniformly(num_points_to_sample)
+
+                mesh1_pcd = mesh1.sample_points_uniformly(number_of_points=num_points_to_sample)
                 mesh2_pcd = mesh2.sample_points_uniformly(num_points_to_sample)
                 mesh3_pcd = mesh3.sample_points_uniformly(num_points_to_sample)
                 mesh4_pcd = mesh4.sample_points_uniformly(num_points_to_sample)
@@ -175,7 +181,7 @@ for specimen in specimens:
                         o3d.io.write_point_cloud(os.path.join(save_dir, "complete",filename+ ".pcd"), pcd)
                         if not os.path.exists(os.path.join(save_dir, "planning")):
                             os.makedirs(os.path.join(save_dir, "planning"))
-                        np.savez(os.path.join(save_dir, "planning" , "{}.npz".format(filename)), planning[el])
+                        np.savez(os.path.join(save_dir, "planning" , "{}.npz".format(filename)),planning[el])
 
 
 

@@ -2,31 +2,34 @@ import json
 import os
 import shutil
 
-directory_path_partial = "/media/aidana/US study/aligned_new_new/partial"
-directory_path_complete = "/media/aidana/US study/aligned_new_new/complete"
-directory_path_planning = "/media/aidana/US study/aligned_new_new/planning"
+directory_path_partial = "/Volumes/Extreme SSD/aligned_new_new/partial"
+directory_path_complete = "/Volumes/Extreme SSD/aligned_new_new/complete"
+directory_path_planning = "/Volumes/Extreme SSD/aligned_new_new/planning"
 
 file_names = os.listdir(directory_path_partial)
 
+save_dir = "/Users/aidanamassalimova/Documents/FinalDataset"
 
-
-for i in range(10):
+for i in range(2):
     train_files = []
     test_files = []
 
-    test_directory_partial = "/media/aidana/US study/PCN_new_new/fold_{}/val/partial/10102023".format(i)
-    test_directory_complete = "/media/aidana/US study/PCN_new_new/fold_{}/val/complete/10102023".format(i)
-    test_directory_planning = "/media/aidana/US study/PCN_new_new/fold_{}/val/planning/10102023".format(i)
+    test_directory_partial = save_dir + "/fold_{}/val/partial/10102023".format(i)
+    test_directory_complete = save_dir + "/fold_{}/val/complete/10102023".format(i)
+    test_directory_planning = save_dir + "/fold_{}/val/planning/10102023".format(i)
 
-    train_directory_complete = "/media/aidana/US study/PCN_new_new/fold_{}/train/complete/10102023".format(i)
-    train_directory_partial = "/media/aidana/US study/PCN_new_new/fold_{}/train/partial/10102023".format(i)
-    train_directory_planning = "/media/aidana/US study/PCN_new_new/fold_{}/train/planning/10102023".format(i)
+    train_directory_complete = save_dir + "/fold_{}/train/complete/10102023".format(i)
+    train_directory_partial = save_dir + "/fold_{}/train/partial/10102023".format(i)
+    train_directory_planning = save_dir + "/fold_{}/train/planning/10102023".format(i)
 
     for file in file_names:
-        if "Specimen_{}recording".format(i+1) in file:
-            test_files.append(file)
+        if "._" in file:
+            continue
         else:
-            train_files.append(file)
+            if "Specimen_{}_".format(i+1) in file:
+                test_files.append(file)
+            else:
+                train_files.append(file)
 
     data = {
         "taxonomy_id": "10102023",
@@ -36,9 +39,12 @@ for i in range(10):
 
     }
 
+    print(len(test_files))
+    print(len(train_files))
 
 
     for file_name in test_files:
+        print(file_name)
         source_path1 = os.path.join(directory_path_partial, file_name,"00.pcd")
         destination_path1 = os.path.join(test_directory_partial, file_name)
         if not os.path.exists(destination_path1):
@@ -51,13 +57,14 @@ for i in range(10):
             os.makedirs(destination_path2)
         shutil.copy(source_path2, destination_path2)
 
-        source_path3 = os.path.join(directory_path_planning, file_name[:-2] + "plannings.npz")
+        source_path3 = os.path.join(directory_path_planning, file_name + ".npz")
         destination_path3 = os.path.join(test_directory_planning)
         if not os.path.exists(destination_path3):
             os.makedirs(destination_path3)
         shutil.copy(source_path3, destination_path3)
 
     for file_name in train_files:
+        print(file_name)
         source_path4 = os.path.join(directory_path_partial, file_name,"00.pcd")
         destination_path4 = os.path.join(train_directory_partial, file_name)
         if not os.path.exists(destination_path4):
@@ -69,12 +76,12 @@ for i in range(10):
             os.makedirs(destination_path5)
         shutil.copy(source_path5, destination_path5)
 
-        source_path6 = os.path.join(directory_path_planning, file_name[:-2] + "plannings.npz")
+        source_path6 = os.path.join(directory_path_planning, file_name + ".npz")
         destination_path6 = os.path.join(train_directory_planning)
         if not os.path.exists(destination_path6):
             os.makedirs(destination_path6)
         shutil.copy(source_path6, destination_path6)
 
     # Create a JSON file and write the data
-    with open('/media/aidana/US study/PCN_new_new/fold_{}/fold_{}.json'.format(i, i), 'w') as json_file:
+    with open(save_dir + '/fold_{}/fold_{}.json'.format(i, i), 'w') as json_file:
         json.dump(data, json_file, indent=4)
