@@ -87,7 +87,9 @@ for specimen in specimens:
 
                     pcd.write(os.path.join(save_data_dir, 'pointcloud_{}.ply'.format(cur_frame)))
 
-
+                    pcd_init = o3d.geometry.PointCloud()
+                    pcd_init.points = o3d.utility.Vector3dVector(pcd.get_data())
+                    o3d.visualization.draw_geometries([pcd_init])
 
 
                     cur_frame+=1

@@ -1,16 +1,18 @@
 import json
 import os
 import shutil
+from scipy.spatial import KDTree, ConvexHull
 
-directory_path_partial = "/Volumes/Extreme SSD/aligned_new_new/partial"
-directory_path_complete = "/Volumes/Extreme SSD/aligned_new_new/complete"
-directory_path_planning = "/Volumes/Extreme SSD/aligned_new_new/planning"
+directory_path_partial = "/Volumes/Extreme SSD/aligned_4096/partial"
+directory_path_complete = "/Volumes/Extreme SSD/aligned_4096/complete"
+directory_path_planning = "/Volumes/Extreme SSD/aligned_4096/planning"
 
 file_names = os.listdir(directory_path_partial)
 
-save_dir = "/Users/aidanamassalimova/Documents/FinalDataset"
+save_dir = "/Users/aidanamassalimova/Documents/FinalDataset_4096"
 
-for i in range(2):
+for i in range(1):
+    i = 8
     train_files = []
     test_files = []
 
@@ -26,7 +28,7 @@ for i in range(2):
         if "._" in file:
             continue
         else:
-            if "Specimen_{}_".format(i+1) in file:
+            if "Specimen_{}_".format(i+2) in file:
                 test_files.append(file)
             else:
                 train_files.append(file)

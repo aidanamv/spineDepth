@@ -8,8 +8,8 @@ import time
 o3d.utility.set_verbosity_level(o3d.utility.VerbosityLevel.Error)
 # Load the STL file
 dir ="/Volumes/Extreme SSD/PoinTr dataset/segmented_spinedepth_new"
-save_dir ="/Volumes/Extreme SSD/aligned_new_new"
-num_points_to_sample = 2048
+save_dir ="/Volumes/Extreme SSD/aligned_4096"
+num_points_to_sample = 4096
 
 
 specimens = os.listdir(dir)

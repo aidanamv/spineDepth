@@ -348,6 +348,7 @@ for specimen in specimens:
                     numpy_array5 = pcd5.get_data()
 
 
+
                     mask_all_zero_1 = np.all(mask_image1 == 0,axis=2)
                     mask_all_zero_2 = np.all(mask_image2 == 0,axis=2)
                     mask_all_zero_3 = np.all(mask_image3 == 0,axis=2)
