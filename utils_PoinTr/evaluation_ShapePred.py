@@ -88,32 +88,34 @@ CD_all = []
 IOU_all = []
 rmse_all = []
 tre_all = []
-df_old = pd.read_csv("evaluation.csv")
-print(df_old.describe())
 
-for fold in range(1):
+for fold in range(0,9):
     print(fold)
-    dir = "/Users/aidanamassalimova/Documents/fold_{}/val".format(fold)
-    files = os.listdir(dir + "/predictions")
-    print(len(files))
+    dir = "/Users/aidanamassalimova/Documents/MICCAI/PoinTr_based/2048/fold_{}/val".format(fold)
+    predictions = np.load(dir + "/vertices.npz")["arr_0"]
+    labels = np.load(dir + "/labels.npz")["arr_0"]
+    gt = np.load(dir + "/vertices_gt.npz")["arr_0"]
+    rgbd = np.load(dir + "/rgbd.npz")["arr_0"]
+    print(len(predictions))
     vertebrae_registrar = []
     CD_list = []
     IOU_list = []
     inlier_rmses = []
     tre_list = []
-    for file in files:
-        result = file.split('_')
+    for el,prediction in enumerate(predictions):
+        result = labels[el].split('_')
         specimen = result[1]
         specimen_list.append(specimen)
         camera_view =result[5]
         camera_list.append(camera_view)
-        vertebrae = result[8][-5]
+        vertebrae = result[-1][1]
         vertebrae_list.append(vertebrae)
-        predictions = np.load(os.path.join(dir, "predictions", file))["arr_0"]
         pcd_predictions = o3d.geometry.PointCloud()
-        pcd_predictions.points = o3d.utility.Vector3dVector(predictions.squeeze(0))
-        pcd_complete = o3d.io.read_point_cloud(os.path.join(dir, "complete", "10102023", file[:-4] + ".pcd"))
-        pcd_partial = o3d.io.read_point_cloud(os.path.join(dir, "partial", "10102023", file[:-4] + "/00.pcd"))
+        pcd_predictions.points = o3d.utility.Vector3dVector(prediction)
+        pcd_complete = o3d.geometry.PointCloud()
+        pcd_complete.points = o3d.utility.Vector3dVector(gt[el])
+        pcd_partial = o3d.geometry.PointCloud()
+        pcd_partial.points = o3d.utility.Vector3dVector(rgbd[el])
         reg_p2p = o3d.pipelines.registration.registration_icp(
             pcd_predictions, pcd_complete, 10, np.identity(4),
             o3d.pipelines.registration.TransformationEstimationPointToPoint(),
@@ -121,7 +123,6 @@ for fold in range(1):
         pcd_predictions.paint_uniform_color((1, 0, 0))
         pcd_complete.paint_uniform_color((0, 0, 1))
         pcd_predictions.transform(reg_p2p.transformation)
-       # o3d.visualization.draw_geometries([pcd_predictions, pcd_complete])
         pcd_predictions.paint_uniform_color([0, 0, 1])
         pcd_complete.paint_uniform_color([0, 1, 0])
 
@@ -183,8 +184,8 @@ for fold in range(1):
 
         #o3d.visualization.draw_geometries([pcd_predictions,pcd_complete,L1, L2, L3])
 
-        CD = chamfer_distance(predictions.squeeze(0), np.asarray(pcd_complete.points))
-        IOU = calculate_iou(predictions.squeeze(0), np.asarray(pcd_complete.points))
+        CD = chamfer_distance(prediction,gt[el])
+        IOU = calculate_iou(prediction, gt[el])
 
 
 
@@ -247,7 +248,7 @@ data ={
     "TRE": tre_all,
 
 }
-df = pd.concat([df_old, pd.DataFrame(data)], ignore_index=True)
-df.to_csv("evaluation.csv", index= False)
+df = pd.DataFrame(data)
+df.to_csv("evaluation_2048.csv", index=False)
 
 

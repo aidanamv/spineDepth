@@ -11,8 +11,7 @@ file_names = os.listdir(directory_path_partial)
 
 save_dir = "/Users/aidanamassalimova/Documents/FinalDataset_4096"
 
-for i in range(1):
-    i = 8
+for i in range(8,9):
     train_files = []
     test_files = []
 
