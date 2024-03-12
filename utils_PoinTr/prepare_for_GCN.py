@@ -10,7 +10,7 @@ def Gaussian_Heatmap(Distance, sigma):
     heatmap = np.exp(-Exponent)
     return heatmap
 
-for fold in range(0,9):
+for fold in range(0,1):
     dir ="/Users/aidanamassalimova/Documents/FinalDataset_2048/fold_{}/val".format(fold)
     save_train = "/Users/aidanamassalimova/Documents/planning_dataset_from_pointr/2048/fold_{}/val".format(fold)
     if not os.path.exists(save_train):

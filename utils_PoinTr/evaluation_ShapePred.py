@@ -88,7 +88,7 @@ CD_all = []
 IOU_all = []
 rmse_all = []
 tre_all = []
-
+iou_input =[]
 for fold in range(0,9):
     print(fold)
     dir = "/Users/aidanamassalimova/Documents/MICCAI/PoinTr_based/2048/fold_{}/val".format(fold)
@@ -187,7 +187,7 @@ for fold in range(0,9):
         CD = chamfer_distance(prediction,gt[el])
         IOU = calculate_iou(prediction, gt[el])
 
-
+        iou_input.append(calculate_iou(rgbd, gt[el]))
 
 
         CD_list.append(CD)
@@ -248,6 +248,8 @@ data ={
     "TRE": tre_all,
 
 }
+
+print(np.mean(iou_input))
 df = pd.DataFrame(data)
 df.to_csv("evaluation_2048.csv", index=False)
 

@@ -2,7 +2,6 @@ import numpy as np
 import open3d as o3d
 import os
 import random
-
 from scipy.spatial import KDTree, ConvexHull
 def calculate_iou(point_cloud1, point_cloud2):
     # Calculate the bounding boxes for each point cloud
