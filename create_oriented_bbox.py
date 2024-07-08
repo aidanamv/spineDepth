@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('TkAgg')  # Use the Tkinter backend
 
-dir = "/Volumes/SpineDepth/PoinTr_dataset/segmented_spinedepth_new/"
-save_label_dir = "/Volumes/SpineDepth/YOLO/labels"
-save_image_dir = "/Volumes/SpineDepth/YOLO/imgs"
+dir = "/media/aidana/SpineDepth/PoinTr_dataset/segmented_spinedepth_new/"
+save_label_dir = "/media/aidana/SpineDepth/YOLO/labels"
+save_image_dir = "/media/aidana/SpineDepth/YOLO/imgs"
 
 if not os.path.exists(save_image_dir):
     os.makedirs(save_image_dir)
@@ -66,31 +66,28 @@ for specimen in specimens:
                           'w') as file:
 
                     for contour in contours:
-                        # Get the bounding box coordinates
-                        x, y, w, h = cv2.boundingRect(contour)
-                        box_normalized = np.array([(x/w, y/h, (x+w)/w, (y+h)/h)])
+                        # Compute the oriented bounding box
+                        rect = cv2.minAreaRect(contour)
+                        box = cv2.boxPoints(rect)
+                        box = np.int0(box)
+
+                        box_normalized = np.zeros((4,2))
+                        box_normalized[:,0] = box[:,0]/image_width
+                        box_normalized[:,1] = box[:,1]/image_height
 
 
-                        # Draw the bounding box on the binary mask for visualization (optional)
-                        bounding_box_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
-                        cv2.rectangle(bounding_box_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-
-                        top_left = (x, y)
-                        top_right = (x + w, y)
-                        bottom_left = (x, y + h)
-                        bottom_right = (x + w, y + h)
-
-                        # Normalize the bounding box coordinates
-                        top_left_norm = (top_left[0] / h, top_left[1] / w)
-                        top_right_norm = (top_right[0] / h, top_right[1] / w)
-                        bottom_left_norm = (bottom_left[0] / h, bottom_left[1] / w)
-                        bottom_right_norm = (bottom_right[0] / h, bottom_right[1] / w)
-
-                        file.write(
-                            f"{num} {top_left_norm[0]} {top_left_norm[1]} {top_right_norm[0]} {top_right_norm[1]} {bottom_left_norm[0]} {bottom_left_norm[1]} {bottom_right_norm[0]} {bottom_right_norm[1]}\n")
-
-
+                        # # Draw the oriented bounding box
+                        # cv2.drawContours(original_image, [box], 0, (0, 255, 0), 2)
+                        # # Display the result
+                        # plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+                        # plt.title('Oriented Bounding Box')
+                        # plt.axis('off')
+                        # plt.show()
+                        # # # # Display the original image with rectangles
+                        # plt.imshow(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+                        # plt.title('Bounding Boxes on Original Image')
+                        # plt.show()
+                        file.write(f"{num} {box_normalized[0][0]:.6f} {box_normalized[0][1]:.6f} {box_normalized[1][0]:.6f} {box_normalized[1][1]:.6f} {box_normalized[2][0]:.6f} {box_normalized[2][1]:.6f} {box_normalized[3][0]:.6f} {box_normalized[3][1]:.6f}\n")
 
                         num+=1
                     file.close()
